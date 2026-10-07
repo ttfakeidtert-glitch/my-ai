@@ -1,5 +1,3 @@
-const API_KEY = "ВСТАВЬ_СВОЙ_КЛЮЧ";
-
 const chat = document.getElementById('chat');
 const input = document.getElementById('msg');
 const send = document.getElementById('send');
@@ -17,16 +15,10 @@ async function ask(text) {
   addMsg(text, 'user');
   history.push({ role: 'user', content: text });
   try {
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const res = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + API_KEY
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-oss-120b",
-        messages: history
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: history })
     });
     const data = await res.json();
     if (data.error) {
