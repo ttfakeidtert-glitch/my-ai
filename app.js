@@ -1,0 +1,53 @@
+const API_KEY = "ВСТАВЬ_СВОЙ_КЛЮЧ";
+
+const chat = document.getElementById('chat');
+const input = document.getElementById('msg');
+const send = document.getElementById('send');
+let history = [];
+
+function addMsg(text, cls) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + cls;
+  d.textContent = text;
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function ask(text) {
+  addMsg(text, 'user');
+  history.push({ role: 'user', content: text });
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "openai/gpt-oss-120b",
+        messages: history
+      })
+    });
+    const data = await res.json();
+    if (data.error) {
+      addMsg("Ошибка: " + data.error.message, 'ai');
+      return;
+    }
+    const reply = data.choices[0].message.content;
+    history.push({ role: 'assistant', content: reply });
+    addMsg(reply, 'ai');
+  } catch (e) {
+    addMsg("Ошибка сети: " + e.message, 'ai');
+  }
+}
+
+send.onclick = () => {
+  const t = input.value.trim();
+  if (!t) return;
+  input.value = '';
+  ask(t);
+};
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') send.click();
+});
