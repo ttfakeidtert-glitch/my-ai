@@ -8,17 +8,58 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>Мой ИИ</header>
+
+  <!-- ЗАТЕМНЕНИЕ ФОНА ПРИ ОТКРЫТОМ МЕНЮ -->
+  <div id="overlay" class="overlay"></div>
+
+  <!-- БОКОВОЕ МЕНЮ -->
+  <div id="sidebar" class="sidebar">
+    <button id="new-chat" class="new-chat">+ Новый чат</button>
+    <div id="chat-list" class="chat-list">
+      <!-- Сюда позже добавятся сохранённые чаты -->
+    </div>
+    <div class="sidebar-bottom">
+      <button id="settings-btn" class="settings-btn">⚙️ Настройки</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН НАСТРОЕК -->
+  <div id="settings-screen" class="settings-screen hidden">
+    <div class="settings-header">
+      <button id="back-btn" class="back-btn">←</button>
+      <span>Настройки</span>
+    </div>
+    <div class="settings-body">
+      <div class="setting-item">
+        <span>🌙 Тёмная тема</span>
+        <label class="switch">
+          <input type="checkbox" id="theme-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ШАПКА -->
+  <header>
+    <button id="menu-btn" class="menu-btn">☰</button>
+    <span>Мой ИИ</span>
+  </header>
+
+  <!-- ЧАТ -->
   <div id="chat"></div>
+
+  <!-- ПОЛЕ ВВОДА -->
   <div class="input-bar">
     <input id="msg" placeholder="Напиши сообщение..." autocomplete="off">
     <button id="send">➤</button>
   </div>
+
   <script src="app.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}
-</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
 </body>
 </html>

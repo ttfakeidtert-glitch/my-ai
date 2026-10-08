@@ -1,8 +1,75 @@
+// ===== ЭЛЕМЕНТЫ =====
 const chat = document.getElementById('chat');
 const input = document.getElementById('msg');
 const send = document.getElementById('send');
+const menuBtn = document.getElementById('menu-btn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const newChatBtn = document.getElementById('new-chat');
+const settingsBtn = document.getElementById('settings-btn');
+const settingsScreen = document.getElementById('settings-screen');
+const backBtn = document.getElementById('back-btn');
+const themeToggle = document.getElementById('theme-toggle');
+
 let history = [];
 
+// ===== ТЕМА =====
+function applyTheme(isDark) {
+  if (isDark) {
+    document.body.classList.remove('light');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.body.classList.add('light');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// Загрузка темы при старте
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  themeToggle.checked = false;
+  applyTheme(false);
+} else {
+  themeToggle.checked = true;
+  applyTheme(true);
+}
+
+themeToggle.addEventListener('change', e => {
+  applyTheme(e.target.checked);
+});
+
+// ===== БОКОВОЕ МЕНЮ =====
+function openSidebar() {
+  sidebar.classList.add('open');
+  overlay.classList.add('open');
+}
+
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
+menuBtn.addEventListener('click', openSidebar);
+overlay.addEventListener('click', closeSidebar);
+
+// ===== НАСТРОЙКИ =====
+settingsBtn.addEventListener('click', () => {
+  settingsScreen.classList.remove('hidden');
+  closeSidebar();
+});
+
+backBtn.addEventListener('click', () => {
+  settingsScreen.classList.add('hidden');
+});
+
+// ===== НОВЫЙ ЧАТ =====
+newChatBtn.addEventListener('click', () => {
+  chat.innerHTML = '';
+  history = [];
+  closeSidebar();
+});
+
+// ===== СООБЩЕНИЯ =====
 function addMsg(text, cls) {
   const d = document.createElement('div');
   d.className = 'msg ' + cls;
@@ -25,10 +92,12 @@ function hideTyping() {
   if (t) t.remove();
 }
 
+// ===== ЗАПРОС К ИИ =====
 async function ask(text) {
   addMsg(text, 'user');
   history.push({ role: 'user', content: text });
   showTyping();
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -37,10 +106,12 @@ async function ask(text) {
     });
     const data = await res.json();
     hideTyping();
+
     if (data.error) {
       addMsg("Ошибка: " + data.error.message, 'ai');
       return;
     }
+
     const reply = data.choices[0].message.content;
     history.push({ role: 'assistant', content: reply });
     addMsg(reply, 'ai');
@@ -50,6 +121,7 @@ async function ask(text) {
   }
 }
 
+// ===== ОТПРАВКА =====
 send.onclick = () => {
   const t = input.value.trim();
   if (!t) return;
