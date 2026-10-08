@@ -5,6 +5,7 @@ const menuBtn = document.getElementById('menu-btn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const newChatBtn = document.getElementById('new-chat');
+const newChatTop = document.getElementById('new-chat-top');
 const settingsBtn = document.getElementById('settings-btn');
 const settingsScreen = document.getElementById('settings-screen');
 const backBtn = document.getElementById('back-btn');
@@ -12,6 +13,7 @@ const themeToggle = document.getElementById('theme-toggle');
 
 let history = [];
 
+// ===== ТЕМА =====
 function applyTheme(isDark) {
   if (isDark) {
     document.body.classList.remove('light');
@@ -22,19 +24,21 @@ function applyTheme(isDark) {
   }
 }
 
+// По умолчанию — светлая. Тёмная только если выбрана
 const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'light') {
-  themeToggle.checked = false;
-  applyTheme(false);
-} else {
+if (savedTheme === 'dark') {
   themeToggle.checked = true;
   applyTheme(true);
+} else {
+  themeToggle.checked = false;
+  applyTheme(false);
 }
 
 themeToggle.addEventListener('change', e => {
   applyTheme(e.target.checked);
 });
 
+// ===== БОКОВОЕ МЕНЮ =====
 function openSidebar() {
   sidebar.classList.add('open');
   overlay.classList.add('open');
@@ -48,6 +52,7 @@ function closeSidebar() {
 menuBtn.addEventListener('click', openSidebar);
 overlay.addEventListener('click', closeSidebar);
 
+// ===== НАСТРОЙКИ =====
 settingsBtn.addEventListener('click', () => {
   settingsScreen.classList.remove('hidden');
   closeSidebar();
@@ -57,12 +62,17 @@ backBtn.addEventListener('click', () => {
   settingsScreen.classList.add('hidden');
 });
 
-newChatBtn.addEventListener('click', () => {
+// ===== НОВЫЙ ЧАТ (две кнопки) =====
+function startNewChat() {
   chat.innerHTML = '';
   history = [];
   closeSidebar();
-});
+}
 
+newChatBtn.addEventListener('click', startNewChat);
+newChatTop.addEventListener('click', startNewChat);
+
+// ===== СООБЩЕНИЯ =====
 function addMsg(text, cls) {
   const d = document.createElement('div');
   d.className = 'msg ' + cls;
@@ -85,6 +95,7 @@ function hideTyping() {
   if (t) t.remove();
 }
 
+// ===== ЗАПРОС К ИИ =====
 async function ask(text) {
   addMsg(text, 'user');
   history.push({ role: 'user', content: text });
@@ -110,6 +121,7 @@ async function ask(text) {
   }
 }
 
+// ===== ОТПРАВКА =====
 send.onclick = () => {
   const t = input.value.trim();
   if (!t) return;
