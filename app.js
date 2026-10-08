@@ -1,3 +1,11 @@
+
+// Авто-вход в полноэкранный режим
+document.addEventListener('click', function requestFs() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  document.removeEventListener('click', requestFs);
+}, { once: true });
 const chat = document.getElementById('chat');
 const input = document.getElementById('msg');
 const send = document.getElementById('send');
