@@ -8,3 +8,38 @@ header { padding:16px; background:#1a1a1a; text-align:center; font-weight:600; b
 .input-bar { display:flex; gap:8px; padding:12px; background:#1a1a1a; }
 input { flex:1; padding:12px; border-radius:20px; border:none; background:#2a2a2a; color:#fff; outline:none; }
 button { width:44px; height:44px; border-radius:50%; border:none; background:#2563eb; color:#fff; font-size:18px; }
+/* Пузырь "печатает..." */
+.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 18px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.typing span {
+  width: 9px;
+  height: 9px;
+  background: #888;
+  border-radius: 50%;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+
+.typing span:nth-child(1) { animation-delay: 0s; }
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    background: #888;
+  }
+  30% {
+    transform: translateY(-8px);
+    background: #2563eb;
+  }
+}

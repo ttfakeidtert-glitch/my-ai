@@ -32,6 +32,19 @@ async function ask(text) {
     if (data.error) {
       addMsg("Ошибка: " + data.error.message, 'ai');
       return;
+function showTyping() {
+  const d = document.createElement('div');
+  d.className = 'typing';
+  d.id = 'typing-indicator';
+  d.innerHTML = '<span></span><span></span><span></span>';
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
     }
     const reply = data.choices[0].message.content;
     history.push({ role: 'assistant', content: reply });
