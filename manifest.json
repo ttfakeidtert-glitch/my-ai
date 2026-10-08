@@ -1,9 +1,23 @@
 {
   "name": "Мой ИИ",
   "short_name": "ИИ",
-  "start_url": "index.html",
+  "description": "Мой личный ИИ-ассистент",
+  "start_url": "/",
   "display": "fullscreen",
-"display_override": ["fullscreen", "standalone"],
+  "display_override": ["fullscreen", "standalone"],
   "background_color": "#0f0f0f",
-  "theme_color": "#2563eb"
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
