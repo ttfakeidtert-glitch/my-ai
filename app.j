@@ -1,4 +1,3 @@
-// ===== ЭЛЕМЕНТЫ =====
 const chat = document.getElementById('chat');
 const input = document.getElementById('msg');
 const send = document.getElementById('send');
@@ -6,10 +5,14 @@ const menuBtn = document.getElementById('menu-btn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const newChatBtn = document.getElementById('new-chat');
+const newChatTop = document.getElementById('new-chat-top');
+const moreBtn = document.getElementById('more-btn');
+const attachBtn = document.getElementById('attach-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const settingsScreen = document.getElementById('settings-screen');
 const backBtn = document.getElementById('back-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const welcome = document.getElementById('welcome');
 
 let history = [];
 
@@ -24,14 +27,13 @@ function applyTheme(isDark) {
   }
 }
 
-// Загрузка темы при старте
 const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'light') {
-  themeToggle.checked = false;
-  applyTheme(false);
-} else {
+if (savedTheme === 'dark') {
   themeToggle.checked = true;
   applyTheme(true);
+} else {
+  themeToggle.checked = false;
+  applyTheme(false);
 }
 
 themeToggle.addEventListener('change', e => {
@@ -63,14 +65,29 @@ backBtn.addEventListener('click', () => {
 });
 
 // ===== НОВЫЙ ЧАТ =====
-newChatBtn.addEventListener('click', () => {
+function startNewChat() {
   chat.innerHTML = '';
   history = [];
+  welcome.classList.remove('hidden');
   closeSidebar();
+}
+
+newChatBtn.addEventListener('click', startNewChat);
+newChatTop.addEventListener('click', startNewChat);
+
+// ===== КНОПКА ⋯ (пока заглушка) =====
+moreBtn.addEventListener('click', () => {
+  alert('Меню появится позже');
+});
+
+// ===== КНОПКА ➕ (пока заглушка) =====
+attachBtn.addEventListener('click', () => {
+  alert('Меню вложений появится позже');
 });
 
 // ===== СООБЩЕНИЯ =====
 function addMsg(text, cls) {
+  welcome.classList.add('hidden');
   const d = document.createElement('div');
   d.className = 'msg ' + cls;
   d.textContent = text;
@@ -97,7 +114,6 @@ async function ask(text) {
   addMsg(text, 'user');
   history.push({ role: 'user', content: text });
   showTyping();
-
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -106,12 +122,10 @@ async function ask(text) {
     });
     const data = await res.json();
     hideTyping();
-
     if (data.error) {
       addMsg("Ошибка: " + data.error.message, 'ai');
       return;
     }
-
     const reply = data.choices[0].message.content;
     history.push({ role: 'assistant', content: reply });
     addMsg(reply, 'ai');
